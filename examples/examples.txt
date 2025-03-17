@@ -1,0 +1,8 @@
+Input|Answer|Error
+"1"|I|false
+1|I|false
+-1||true
+0||true
+||true
+"three"||true
+129|CXXIX|false
