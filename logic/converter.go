@@ -2,7 +2,13 @@ package logic
 
 import (
 	"os"
+	"strconv"
 	"time"
+)
+
+const (
+	minInput = 1
+	maxInput = 3999
 )
 
 var romans = ""
@@ -15,24 +21,62 @@ var romans = ""
 //
 // Returns:
 //   - numerals is the same number represented as numerals like "CXXIII."
+//   - err is an error if the `input` is not valid. See the Errors section for
+//     more details.
 //
 // Examples:
 //
 //	"123" => "CXXIII"
 //	"8" => "VIII"
 //	"19" => "XIV"
-func Convert(input string) (numerals string) {
+//
+// Errors:
+//   - [ErrorNotANumber] is returned if the input is not a valid integer.
+//   - [ErrorNumberTooBig] is returned if the input is larger than [maxInput].
+//   - [ErrorNumberTooSmall] is returned if the input is smaller than [minInput].
+func Convert(input string) (numerals string, err error) {
+	value, err := strconv.Atoi(input)
+	if err != nil {
+		return "", ErrorNotANumber
+	}
+
+	if value > maxInput {
+		return "", ErrorNumberTooBig
+	}
+
+	if value < minInput {
+		return "", ErrorNumberTooSmall
+	}
+
+	return OldConvert(input), nil
+}
+
+func OldConvert(input string) (numerals string) {
 	loadRomans()
 	romansIndex := 0
 	inputIndex := len(input) - 1
 	buffer := make([]byte, 0, 10)
 	for inputIndex >= 0 {
-		buffer = append(convertDigit(input[inputIndex], romans[romansIndex], romans[romansIndex+1], romans[romansIndex+2]), buffer...)
+		buffer = append(
+			convertDigit(
+				input[inputIndex],
+				selectNumeral(romans, romansIndex),
+				selectNumeral(romans, romansIndex+1),
+				selectNumeral(romans, romansIndex+2)),
+			buffer...)
 		romansIndex += 2
 		inputIndex--
 	}
 
 	return string(buffer)
+}
+
+func selectNumeral(numerals string, index int) byte {
+	if index < 0 || index >= len(numerals) {
+		return ' '
+	}
+
+	return numerals[index]
 }
 
 func loadRomans() {
