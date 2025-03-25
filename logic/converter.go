@@ -34,7 +34,7 @@ var romans = ""
 //   - [ErrorNotANumber] is returned if the input is not a valid integer.
 //   - [ErrorNumberTooBig] is returned if the input is larger than [maxInput].
 //   - [ErrorNumberTooSmall] is returned if the input is smaller than [minInput].
-func Convert(input string) (numerals string, err error) {
+func Convert(input string, outPort WriterPort) (numerals string, err error) {
 	value, err := strconv.Atoi(input)
 	if err != nil {
 		return "", ErrorNotANumber
@@ -48,7 +48,9 @@ func Convert(input string) (numerals string, err error) {
 		return "", ErrorNumberTooSmall
 	}
 
-	return OldConvert(input), nil
+	numerals = OldConvert(input)
+	outPort.Write(numerals)
+	return numerals, nil
 }
 
 func OldConvert(input string) (numerals string) {
