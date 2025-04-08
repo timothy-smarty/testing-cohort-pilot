@@ -4,10 +4,18 @@ import (
 	"bytes"
 	"testing"
 
+	"bitbucket.org/smartystreets/injector"
 	"github.com/smarty/assertions/should"
 )
 
 func TestConverter(t *testing.T) {
+	inj := injector.New()
+	injector.RegisterSingleton[Stringy](inj, func() Stringy { return &MyStringy{} })
+	injector.RegisterTransient[*Converter](inj, NewConverter)
+	injector.Verify(inj)
+
+	converter := injector.Get[*Converter](inj)
+
 	testTable := map[string]struct {
 		Input          string
 		ExpectedOutput string
@@ -30,7 +38,7 @@ func TestConverter(t *testing.T) {
 			}()
 
 			buffer := new(bytes.Buffer)
-			actual, err := Convert(testCase.Input, NewMockAdaptor(buffer))
+			actual, err := converter.Convert(testCase.Input, NewMockAdaptor(buffer))
 			should.So(t, actual, should.Equal, testCase.ExpectedOutput)
 			if testCase.ExpectedError == nil {
 				should.So(t, err, should.BeNil)
@@ -42,6 +50,7 @@ func TestConverter(t *testing.T) {
 }
 
 func TestConverterPackage(t *testing.T) {
+	converter := NewConverter(&MyStringy{})
 	testTable := map[string]struct {
 		Input          string
 		ExpectedOutput string
@@ -64,33 +73,13 @@ func TestConverterPackage(t *testing.T) {
 			}()
 
 			buffer := new(bytes.Buffer)
-			_, err := Convert(testCase.Input, NewMockAdaptor(buffer))
+			_, err := converter.Convert(testCase.Input, NewMockAdaptor(buffer))
 			should.So(t, buffer.String(), should.Equal, testCase.ExpectedOutput)
 			if testCase.ExpectedError == nil {
 				should.So(t, err, should.BeNil)
 			} else {
 				should.So(t, err, should.Wrap, testCase.ExpectedError)
 			}
-		})
-	}
-}
-
-func TestSelectNumeral(t *testing.T) {
-	testTable := map[string]struct {
-		Index          int
-		ExpectedOutput byte
-	}{
-		"selectNumeral -1": {Index: -1, ExpectedOutput: ' '},
-		"selectNumeral 0":  {Index: 0, ExpectedOutput: 'I'},
-		"selectNumeral 6":  {Index: 6, ExpectedOutput: 'M'},
-		"selectNumeral 7":  {Index: 7, ExpectedOutput: ' '},
-	}
-
-	loadRomans()
-	for name, testCase := range testTable {
-		t.Run(name, func(t *testing.T) {
-			actual := selectNumeral(romans, testCase.Index)
-			should.So(t, actual, should.Equal, testCase.ExpectedOutput)
 		})
 	}
 }

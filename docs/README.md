@@ -14,7 +14,8 @@
   * What is Hexagonal Architecture? - about 15 minutes.
   * CREATE: Output to file vs output to terminal. - about 45 minutes.
 * Refactoring and System Tests.
-  * CREATE: Switch out huge dependency for smaller dependencies when testing. - about 55 minutes.
+  * CREATE: Switch out huge dependency for smaller dependencies when testing. - about 45 minutes.
+  * Discuss dependency inversion. - about 10 minutes.
 * Manual Tests.
   * Dependency through parameter vs constructor. - about 5 minutes.
   * CREATE: Input from file vs input from terminal. - about 40 minutes.

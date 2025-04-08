@@ -1,3 +1,5 @@
+bitbucket.org/smartystreets/injector v0.1.0 h1:1Oyag+4BywtQUmiRHYEMldZP5fCOm4do2mQL3drIy8w=
+bitbucket.org/smartystreets/injector v0.1.0/go.mod h1:+eyQ1uFafnoHdq8CxNi/A09lgARSumnk1T9I0Xw02KM=
 github.com/smarty/assertions v1.16.0 h1:EvHNkdRA4QHMrn75NZSoUQ/mAUXAYWfatfB01yTCzfY=
 github.com/smarty/assertions v1.16.0/go.mod h1:duaaFdCS0K9dnoM50iyek/eYINOZ64gbh1Xlf6LG7AI=
 github.com/smarty/gunit v1.5.0 h1:OmG6a/rgi7qCjlQis6VjXbvx/WqZ8I6xSlbfN4YB5MY=
